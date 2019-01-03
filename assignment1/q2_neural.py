@@ -29,6 +29,7 @@ def forward_backward_prop(X, labels, params, dimensions):
     ### Unpack network parameters (do not modify)
     ofs = 0
     Dx, H, Dy = (dimensions[0], dimensions[1], dimensions[2])
+    M = X.shape[0]
 
     W1 = np.reshape(params[ofs:ofs+ Dx * H], (Dx, H))
     ofs += Dx * H
@@ -40,11 +41,24 @@ def forward_backward_prop(X, labels, params, dimensions):
 
     # Note: compute cost based on `sum` not `mean`.
     ### YOUR CODE HERE: forward propagation
-    raise NotImplementedError
+    z1 = X.dot(W1) + b1
+    h = sigmoid(z1)
+    z2 = h.dot(W2) + b2
+    y_hat = softmax(z2)
+
+    cost = -np.sum(np.log(y_hat[labels == 1])) / M
     ### END YOUR CODE
 
     ### YOUR CODE HERE: backward propagation
-    raise NotImplementedError
+    d1 = (y_hat - labels) / M
+    d2 = d1.dot(W2.T)
+    d3 = d2 * h * (1 - h)
+
+    gradW2 = h.T.dot(d1)
+    gradb2 = np.sum(d1, axis=0, keepdims=True)
+
+    gradW1 = X.T.dot(d3)
+    gradb1 = np.sum(d3, axis=0, keepdims=True)
     ### END YOUR CODE
 
     ### Stack gradients (do not modify)
@@ -66,7 +80,7 @@ def sanity_check():
     data = np.random.randn(N, dimensions[0])   # each row will be a datum
     labels = np.zeros((N, dimensions[2]))
     for i in xrange(N):
-        labels[i, random.randint(0,dimensions[2]-1)] = 1
+        labels[i, random.randint(0, dimensions[2]-1)] = 1
 
     params = np.random.randn((dimensions[0] + 1) * dimensions[1] + (
         dimensions[1] + 1) * dimensions[2], )
@@ -75,19 +89,5 @@ def sanity_check():
         forward_backward_prop(data, labels, params, dimensions), params)
 
 
-def your_sanity_checks():
-    """
-    Use this space add any additional sanity checks by running:
-        python q2_neural.py
-    This function will not be called by the autograder, nor will
-    your additional tests be graded.
-    """
-    print "Running your sanity checks..."
-    ### YOUR CODE HERE
-    raise NotImplementedError
-    ### END YOUR CODE
-
-
 if __name__ == "__main__":
     sanity_check()
-    your_sanity_checks()
