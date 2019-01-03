@@ -16,8 +16,8 @@ def gradcheck_naive(f, x):
 
     rndstate = random.getstate()
     random.setstate(rndstate)
-    fx, grad = f(x) # Evaluate function value at original point
-    h = 1e-4        # Do not change this!
+    fx, grad = f(x)  # Evaluate function value at original point
+    h = 1e-4  # Do not change this!
 
     # Iterate over all indexes ix in x to check the gradient.
     it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
@@ -37,7 +37,15 @@ def gradcheck_naive(f, x):
         # to test cost functions with built in randomness later.
 
         ### YOUR CODE HERE:
-        raise NotImplementedError
+        old = x[ix]
+
+        x[ix] += h
+        fx_plus_h = f(x)[0]
+        x[ix] -= 2 * h
+        fx_minus_h = f(x)[0]
+        numgrad = (fx_plus_h - fx_minus_h) / (2 * h)
+
+        x[ix] = old
         ### END YOUR CODE
 
         # Compare gradients
@@ -49,7 +57,7 @@ def gradcheck_naive(f, x):
                 grad[ix], numgrad)
             return
 
-        it.iternext() # Step to next dimension
+        it.iternext()  # Step to next dimension
 
     print "Gradient check passed!"
 
@@ -61,25 +69,17 @@ def sanity_check():
     quad = lambda x: (np.sum(x ** 2), x * 2)
 
     print "Running sanity checks..."
-    gradcheck_naive(quad, np.array(123.456))      # scalar test
-    gradcheck_naive(quad, np.random.randn(3,))    # 1-D test
-    gradcheck_naive(quad, np.random.randn(4,5))   # 2-D test
+    gradcheck_naive(quad, np.array(123.456))  # scalar test
+    gradcheck_naive(quad, np.random.randn(3, ))  # 1-D test
+    gradcheck_naive(quad, np.random.randn(4, 5))  # 2-D test
     print ""
 
-
-def your_sanity_checks():
-    """
-    Use this space add any additional sanity checks by running:
-        python q2_gradcheck.py
-    This function will not be called by the autograder, nor will
-    your additional tests be graded.
-    """
-    print "Running your sanity checks..."
-    ### YOUR CODE HERE
-    raise NotImplementedError
-    ### END YOUR CODE
+    poly = lambda x: (np.sum(4 * x ** 3 + 2 * x), 12 * x ** 2 + 2)
+    print "Running sanity checks..."
+    gradcheck_naive(poly, np.array(123.456))  # scalar test
+    gradcheck_naive(poly, np.random.randn(3, ))  # 1-D test
+    gradcheck_naive(poly, np.random.randn(4, 5))  # 2-D test
 
 
 if __name__ == "__main__":
     sanity_check()
-    your_sanity_checks()
