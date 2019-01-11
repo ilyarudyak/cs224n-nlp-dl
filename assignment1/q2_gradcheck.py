@@ -40,10 +40,16 @@ def gradcheck_naive(f, x):
         old = x[ix]
 
         x[ix] += h
-        fx_plus_h = f(x)[0]
+
+        random.setstate(rndstate)
+        fx_plus = f(x)[0]
+
         x[ix] -= 2 * h
-        fx_minus_h = f(x)[0]
-        numgrad = (fx_plus_h - fx_minus_h) / (2 * h)
+
+        random.setstate(rndstate)
+        fx_minus = f(x)[0]
+
+        numgrad = (fx_plus - fx_minus) / (2 * h)
 
         x[ix] = old
         ### END YOUR CODE
