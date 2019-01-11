@@ -2,6 +2,7 @@
 
 import numpy as np
 import random
+import time
 
 from q1_softmax import softmax
 from q2_gradcheck import gradcheck_naive
@@ -74,8 +75,8 @@ def softmaxCostAndGradient(predicted, target, outputVectors, dataset):
     cost = -np.log(yhat[y == 1])[0]
 
     # gradients
-    dvc = U.T.dot(yhat - y)  # (n, V).dot(V,) -> (n,)
-    dU = np.outer((yhat - y), vc)  # (V, n)
+    dvc = U.T.dot(yhat - y)  # (n, V).dot(V,) -> (n,) the same as vc
+    dU = np.outer((yhat - y), vc)  # (V, n) the same as U
 
     gradPred = dvc
     grad = dU
@@ -116,7 +117,22 @@ def negSamplingCostAndGradient(predicted, target, outputVectors, dataset,
     indices.extend(getNegativeSamples(target, dataset, K))
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    vc = predicted
+    U = outputVectors
+    uo = U[target]
+
+    prod = -np.array([U[k].dot(vc) for k in indices[1:]])
+    cost = -np.log(sigmoid(uo.dot(vc))) - np.sum(np.log(sigmoid(prod)))
+
+    prod2 = np.array([(sigmoid(-U[k].dot(vc)) - 1) * U[k] for k in indices[1:]])
+    dvc = (sigmoid(uo.dot(vc)) - 1) * uo - np.sum(prod2, axis=0)
+    gradPred = dvc
+
+    dU = np.zeros_like(U)
+    dU[target, :] = (sigmoid(uo.dot(vc)) - 1) * vc
+    for k in indices[1:]:
+        dU[k, :] -= (sigmoid(-U[k].dot(vc)) - 1) * vc
+    grad = dU
     ### END YOUR CODE
 
     return cost, gradPred, grad
@@ -258,8 +274,62 @@ def word2vec_sgd_wrapper(word2vecModel, tokens, wordVectors, dataset, C,
 #                dummy_tokens, dummy_vectors[:5, :], dummy_vectors[5:, :], dataset,
 #                negSamplingCostAndGradient)
 
+def negSamplingCostAndGradientSol(predicted, target, outputVectors, dataset,
+                               K=10):
+    indices = [target]
+    indices.extend(getNegativeSamples(target, dataset, K))
+
+    ### YOUR CODE HERE
+    grad = np.zeros(outputVectors.shape)
+    gradPred = np.zeros(predicted.shape)
+    cost = 0
+    z = sigmoid(np.dot(outputVectors[target], predicted))
+
+    cost -= np.log(z)
+    grad[target] += predicted * (z - 1.0)
+    gradPred += outputVectors[target] * (z - 1.0)
+
+    for k in xrange(K):
+        samp = indices[k + 1]
+        z = sigmoid(np.dot(outputVectors[samp], predicted))
+        cost -= np.log(1.0 - z)
+        grad[samp] += predicted * z
+        gradPred += outputVectors[samp] * z
+    ### END YOUR CODE
+
+    return cost, gradPred, grad
+
 
 if __name__ == "__main__":
     # test_normalize_rows()
     # test_word2vec()
-    pass
+
+    np.random.seed(42)
+    V, n = 20, 3
+    predicted, target, outputVectors = np.random.rand(n), 0, np.random.rand(V, n)
+    dataset = type('dummy', (), {})()
+
+    def dummySampleTokenIdx():
+        random.seed(425)
+        return random.randint(0, 4)
+
+    def getRandomContext(C):
+        random.seed(427)
+        tokens = ["a", "b", "c", "d", "e"]
+        return tokens[random.randint(0, 4)], \
+               [tokens[random.randint(0, 4)] for i in xrange(2 * C)]
+
+    dataset.sampleTokenIdx = dummySampleTokenIdx
+    dataset.getRandomContext = getRandomContext
+
+    start = time.time()
+    cost, gradPred, grad = negSamplingCostAndGradient(predicted, target, outputVectors, dataset)
+    finish = time.time()
+    cost2, gradPred2, grad2 = negSamplingCostAndGradientSol(predicted, target, outputVectors, dataset)
+    finish2 = time.time()
+
+    print (finish - start) / (finish2 - finish)
+
+    assert np.isclose(cost, cost2)
+    assert np.allclose(gradPred, gradPred2)
+    assert np.allclose(grad, grad2)
