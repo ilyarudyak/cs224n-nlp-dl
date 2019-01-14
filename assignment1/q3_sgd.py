@@ -85,7 +85,8 @@ def sgd(f, x0, step, iterations, postprocessing=None, useSaved=False,
 
         cost = None
         ### YOUR CODE HERE
-        raise NotImplementedError
+        cost, grad = f(x)
+        x -= step * grad
         ### END YOUR CODE
 
         if iter % PRINT_EVERY == 0:
@@ -123,19 +124,19 @@ def sanity_check():
     print ""
 
 
-def your_sanity_checks():
-    """
-    Use this space add any additional sanity checks by running:
-        python q3_sgd.py
-    This function will not be called by the autograder, nor will
-    your additional tests be graded.
-    """
-    print "Running your sanity checks..."
-    ### YOUR CODE HERE
-    raise NotImplementedError
-    ### END YOUR CODE
+# def your_sanity_checks():
+#     """
+#     Use this space add any additional sanity checks by running:
+#         python q3_sgd.py
+#     This function will not be called by the autograder, nor will
+#     your additional tests be graded.
+#     """
+#     print "Running your sanity checks..."
+#     ### YOUR CODE HERE
+#     raise NotImplementedError
+#     ### END YOUR CODE
 
 
 if __name__ == "__main__":
     sanity_check()
-    your_sanity_checks()
+    # your_sanity_checks()
