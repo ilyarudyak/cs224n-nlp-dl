@@ -3,9 +3,9 @@
 import random
 import numpy as np
 from utils.treebank import StanfordSentiment
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
+# import matplotlib
+# matplotlib.use('agg')
+# import matplotlib.pyplot as plt
 import time
 
 from q3_word2vec import *
@@ -48,24 +48,24 @@ wordVectors = np.concatenate(
     axis=0)
 # wordVectors = wordVectors[:nWords,:] + wordVectors[nWords:,:]
 
-visualizeWords = [
-    "the", "a", "an", ",", ".", "?", "!", "``", "''", "--",
-    "good", "great", "cool", "brilliant", "wonderful", "well", "amazing",
-    "worth", "sweet", "enjoyable", "boring", "bad", "waste", "dumb",
-    "annoying"]
-
-visualizeIdx = [tokens[word] for word in visualizeWords]
-visualizeVecs = wordVectors[visualizeIdx, :]
-temp = (visualizeVecs - np.mean(visualizeVecs, axis=0))
-covariance = 1.0 / len(visualizeIdx) * temp.T.dot(temp)
-U,S,V = np.linalg.svd(covariance)
-coord = temp.dot(U[:,0:2])
-
-for i in xrange(len(visualizeWords)):
-    plt.text(coord[i,0], coord[i,1], visualizeWords[i],
-        bbox=dict(facecolor='green', alpha=0.1))
-
-plt.xlim((np.min(coord[:,0]), np.max(coord[:,0])))
-plt.ylim((np.min(coord[:,1]), np.max(coord[:,1])))
-
-plt.savefig('q3_word_vectors.png')
+# visualizeWords = [
+#     "the", "a", "an", ",", ".", "?", "!", "``", "''", "--",
+#     "good", "great", "cool", "brilliant", "wonderful", "well", "amazing",
+#     "worth", "sweet", "enjoyable", "boring", "bad", "waste", "dumb",
+#     "annoying"]
+#
+# visualizeIdx = [tokens[word] for word in visualizeWords]
+# visualizeVecs = wordVectors[visualizeIdx, :]
+# temp = (visualizeVecs - np.mean(visualizeVecs, axis=0))
+# covariance = 1.0 / len(visualizeIdx) * temp.T.dot(temp)
+# U,S,V = np.linalg.svd(covariance)
+# coord = temp.dot(U[:,0:2])
+#
+# for i in xrange(len(visualizeWords)):
+#     plt.text(coord[i,0], coord[i,1], visualizeWords[i],
+#         bbox=dict(facecolor='green', alpha=0.1))
+#
+# plt.xlim((np.min(coord[:,0]), np.max(coord[:,0])))
+# plt.ylim((np.min(coord[:,1]), np.max(coord[:,1])))
+#
+# plt.savefig('q3_word_vectors.png')
