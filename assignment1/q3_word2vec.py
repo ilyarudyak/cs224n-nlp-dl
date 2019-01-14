@@ -23,13 +23,13 @@ def normalizeRows(x):
     return x
 
 
-def test_normalize_rows():
-    print "Testing normalizeRows..."
-    x = normalizeRows(np.array([[3.0, 4.0], [1, 2]]))
-    print x
-    ans = np.array([[0.6, 0.8], [0.4472136, 0.89442719]])
-    assert np.allclose(x, ans, rtol=1e-05, atol=1e-06)
-    print ""
+# def test_normalize_rows():
+#     print "Testing normalizeRows..."
+#     x = normalizeRows(np.array([[3.0, 4.0], [1, 2]]))
+#     print x
+#     ans = np.array([[0.6, 0.8], [0.4472136, 0.89442719]])
+#     assert np.allclose(x, ans, rtol=1e-05, atol=1e-06)
+#     print ""
 
 
 def softmaxCostAndGradient(predicted, target, outputVectors, dataset):
@@ -97,8 +97,7 @@ def getNegativeSamples(target, dataset, K):
     return indices
 
 
-def negSamplingCostAndGradient(predicted, target, outputVectors, dataset,
-                               K=10):
+def negSamplingCostAndGradientNaive(predicted, target, outputVectors, dataset, K=10):
     """ Negative sampling cost function for word2vec models
 
     Implement the cost and gradients for one predicted word vector
@@ -117,6 +116,7 @@ def negSamplingCostAndGradient(predicted, target, outputVectors, dataset,
     indices.extend(getNegativeSamples(target, dataset, K))
 
     ### YOUR CODE HERE
+    start = time.time()
     vc = predicted
     U = outputVectors
     uo = U[target]
@@ -130,6 +130,37 @@ def negSamplingCostAndGradient(predicted, target, outputVectors, dataset,
 
     dU = np.zeros_like(U)
     dU[target, :] = (sigmoid(uo.dot(vc)) - 1) * vc
+
+    for k in indices[1:]:
+        dU[k, :] -= (sigmoid(-U[k].dot(vc)) - 1) * vc
+    grad = dU
+    # print "elapsed time:", (time.time() - start) * 1000, "ms"
+    ### END YOUR CODE
+
+    return cost, gradPred, grad
+
+
+def negSamplingCostAndGradient(predicted, target, outputVectors, dataset, K=10):
+    indices = [target]
+    indices.extend(getNegativeSamples(target, dataset, K))
+
+    ### YOUR CODE HERE
+    vc = predicted  # (n,)
+    U = outputVectors
+    o = target
+    uo = U[o]
+    UK = U[indices[1:], :]  # (K, n)
+
+    prod = -UK.dot(vc)
+    cost = -np.log(sigmoid(uo.dot(vc))) - np.sum(np.log(sigmoid(prod)))
+
+    prod2 = sigmoid(-UK.dot(vc)) - 1  # (K,)
+    prod3 = np.dot(prod2, UK)  # (K,) dot (K, n) -> (n,)
+    dvc = (sigmoid(uo.dot(vc)) - 1) * uo - prod3
+    gradPred = dvc
+
+    dU = np.zeros_like(U)
+    dU[o, :] = (sigmoid(uo.dot(vc)) - 1) * vc
 
     for k in indices[1:]:
         dU[k, :] -= (sigmoid(-U[k].dot(vc)) - 1) * vc
@@ -264,7 +295,6 @@ def test_word2vec():
     gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
         skipgram, dummy_tokens, vec, dataset, 5, negSamplingCostAndGradient),
                     dummy_vectors)
-
     # print "\n==== Gradient check for CBOW      ===="
     # gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
     #     cbow, dummy_tokens, vec, dataset, 5, softmaxCostAndGradient),
@@ -273,12 +303,12 @@ def test_word2vec():
     #     cbow, dummy_tokens, vec, dataset, 5, negSamplingCostAndGradient),
     #                 dummy_vectors)
 
-    print "\n=== Results ==="
-    print skipgram("c", 3, ["a", "b", "e", "d", "b", "c"],
-                   dummy_tokens, dummy_vectors[:5, :], dummy_vectors[5:, :], dataset)
-    print skipgram("c", 1, ["a", "b"],
-                   dummy_tokens, dummy_vectors[:5, :], dummy_vectors[5:, :], dataset,
-                   negSamplingCostAndGradient)
+    # print "\n=== Results ==="
+    # print skipgram("c", 3, ["a", "b", "e", "d", "b", "c"],
+    #                dummy_tokens, dummy_vectors[:5, :], dummy_vectors[5:, :], dataset)
+    # print skipgram("c", 1, ["a", "b"],
+    #                dummy_tokens, dummy_vectors[:5, :], dummy_vectors[5:, :], dataset,
+    #                negSamplingCostAndGradient)
 
     # print cbow("a", 2, ["a", "b", "c", "a"],
     #            dummy_tokens, dummy_vectors[:5, :], dummy_vectors[5:, :], dataset)
@@ -288,5 +318,5 @@ def test_word2vec():
 
 
 if __name__ == "__main__":
-    test_normalize_rows()
+    # test_normalize_rows()
     test_word2vec()
