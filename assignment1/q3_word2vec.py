@@ -214,28 +214,40 @@ def skipgram(currentWord, C, contextWords, tokens, inputVectors, outputVectors,
     return cost, gradIn, gradOut
 
 
-# def cbow(currentWord, C, contextWords, tokens, inputVectors, outputVectors,
-#          dataset, word2vecCostAndGradient=softmaxCostAndGradient):
-#     """CBOW model in word2vec
-#
-#     Implement the continuous bag-of-words model in this function.
-#
-#     Arguments/Return specifications: same as the skip-gram model
-#
-#     Extra credit: Implementing CBOW is optional, but the gradient
-#     derivations are not. If you decide not to implement CBOW, remove
-#     the NotImplementedError.
-#     """
-#
-#     cost = 0.0
-#     gradIn = np.zeros(inputVectors.shape)
-#     gradOut = np.zeros(outputVectors.shape)
-#
-#     ### YOUR CODE HERE
-#     raise NotImplementedError
-#     ### END YOUR CODE
-#
-#     return cost, gradIn, gradOut
+def cbow(currentWord, C, contextWords, tokens, inputVectors, outputVectors,
+         dataset, word2vecCostAndGradient=softmaxCostAndGradient):
+    """CBOW model in word2vec
+
+    Implement the continuous bag-of-words model in this function.
+
+    Arguments/Return specifications: same as the skip-gram model
+
+    Extra credit: Implementing CBOW is optional, but the gradient
+    derivations are not. If you decide not to implement CBOW, remove
+    the NotImplementedError.
+    """
+
+    cost = 0.0
+    gradIn = np.zeros(inputVectors.shape)
+    gradOut = np.zeros(outputVectors.shape)
+
+    ### YOUR CODE HERE
+    V, U = inputVectors, outputVectors
+    c = tokens[currentWord]
+
+    # simplified definition of v_hat - eq. (8) in assignment 1
+    context_index = [tokens[word] for word in contextWords]
+    v_hat = np.sum(inputVectors[context_index], axis=0)
+
+    cost, dv_hat, dU = word2vecCostAndGradient(v_hat, c, U, dataset)
+
+    for word in contextWords:
+        gradIn[tokens[word]] += dv_hat
+    gradOut = dU
+
+    ### END YOUR CODE
+
+    return cost, gradIn, gradOut
 
 
 #############################################
@@ -295,13 +307,13 @@ def test_word2vec():
     gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
         skipgram, dummy_tokens, vec, dataset, 5, negSamplingCostAndGradient),
                     dummy_vectors)
-    # print "\n==== Gradient check for CBOW      ===="
-    # gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
-    #     cbow, dummy_tokens, vec, dataset, 5, softmaxCostAndGradient),
-    #                 dummy_vectors)
-    # gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
-    #     cbow, dummy_tokens, vec, dataset, 5, negSamplingCostAndGradient),
-    #                 dummy_vectors)
+    print "\n==== Gradient check for CBOW      ===="
+    gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
+        cbow, dummy_tokens, vec, dataset, 5, softmaxCostAndGradient),
+                    dummy_vectors)
+    gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
+        cbow, dummy_tokens, vec, dataset, 5, negSamplingCostAndGradient),
+                    dummy_vectors)
 
     # print "\n=== Results ==="
     # print skipgram("c", 3, ["a", "b", "e", "d", "b", "c"],
