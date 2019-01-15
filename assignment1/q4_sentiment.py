@@ -46,10 +46,9 @@ def getSentenceFeatures(tokens, wordVectors, sentence):
     # Output:
     # - sentVector: feature vector for the sentence
 
-    sentVector = np.zeros((wordVectors.shape[1],))
-
     ### YOUR CODE HERE
-    raise NotImplementedError
+    sentence_vectors = np.array([wordVectors[tokens[word]] for word in sentence])
+    sentVector = np.mean(sentence_vectors, axis=0)
     ### END YOUR CODE
 
     assert sentVector.shape == (wordVectors.shape[1],)
