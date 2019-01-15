@@ -98,7 +98,6 @@ def accuracy(y, yhat):
     assert(y.shape == yhat.shape)
     return np.sum(y == yhat) * 100.0 / y.size
 
-
 def plotRegVsAccuracy(regValues, results, filename):
     """ Make a plot of regularization vs accuracy """
     plt.plot(regValues, [x["train"] for x in results])
