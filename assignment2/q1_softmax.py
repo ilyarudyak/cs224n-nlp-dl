@@ -32,34 +32,37 @@ def softmax(x):
     return out
 
 
-# def cross_entropy_loss(y, yhat):
-#     """
-#     Compute the cross entropy loss in tensorflow.
-#     The loss should be summed over the current minibatch.
-#
-#     y is a one-hot tensor of shape (n_samples, n_classes) and yhat is a tensor
-#     of shape (n_samples, n_classes). y should be of dtype tf.int32, and yhat should
-#     be of dtype tf.float32.
-#
-#     The functions tf.to_float, tf.reduce_sum, and tf.log might prove useful. (Many
-#     solutions are possible, so you may not need to use all of these functions).
-#
-#     Note: You are NOT allowed to use the tensorflow built-in cross-entropy
-#                 functions.
-#
-#     Args:
-#         y:    tf.Tensor with shape (n_samples, n_classes). One-hot encoded.
-#         yhat: tf.Tensorwith shape (n_sample, n_classes). Each row encodes a
-#                     probability distribution and should sum to 1.
-#     Returns:
-#         out:  tf.Tensor with shape (1,) (Scalar output). You need to construct this
-#                     tensor in the problem.
-#     """
-#
-#     ### YOUR CODE HERE
-#     ### END YOUR CODE
-#
-#     return out
+def cross_entropy_loss(y, yhat):
+    """
+    Compute the cross entropy loss in tensorflow.
+    The loss should be summed over the current minibatch.
+
+    y is a one-hot tensor of shape (n_samples, n_classes) and yhat is a tensor
+    of shape (n_samples, n_classes). y should be of dtype tf.int32, and yhat should
+    be of dtype tf.float32.
+
+    The functions tf.to_float, tf.reduce_sum, and tf.log might prove useful. (Many
+    solutions are possible, so you may not need to use all of these functions).
+
+    Note: You are NOT allowed to use the tensorflow built-in cross-entropy
+                functions.
+
+    Args:
+        y:    tf.Tensor with shape (n_samples, n_classes). One-hot encoded.
+        yhat: tf.Tensorwith shape (n_samples, n_classes). Each row encodes a
+                    probability distribution and should sum to 1.
+    Returns:
+        out:  tf.Tensor with shape (1,) (Scalar output). You need to construct this
+                    tensor in the problem.
+    """
+
+    ### YOUR CODE HERE
+    y = tf.cast(y, tf.float32)
+    log_yhat = tf.log(yhat)
+    out = - tf.reduce_sum(tf.multiply(y, log_yhat))
+    ### END YOUR CODE
+
+    return out
 
 
 # def test_softmax_basic():
@@ -101,4 +104,11 @@ def softmax(x):
 
 
 if __name__ == "__main__":
-    pass
+    y = np.array([[0, 1], [1, 0], [1, 0]])
+    yhat = np.array([[.5, .5], [.5, .5], [.5, .5]])
+
+    test1 = cross_entropy_loss(tf.constant(y, dtype=tf.int32), tf.constant(yhat, dtype=tf.float32))
+    with tf.Session() as sess:
+        test1 = sess.run(test1)
+    expected = -3 * np.log(.5)
+    test_all_close("Cross-entropy test 1", test1, expected)
