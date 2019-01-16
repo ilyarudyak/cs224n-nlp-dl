@@ -118,6 +118,7 @@ class SoftmaxModel(Model):
             loss: A 0-d tensor (scalar)
         """
         ### YOUR CODE HERE
+        loss = cross_entropy_loss(self.labels_placeholder, pred)
         ### END YOUR CODE
         return loss
 
@@ -141,6 +142,8 @@ class SoftmaxModel(Model):
             train_op: The Op for training.
         """
         ### YOUR CODE HERE
+        optimizer = tf.train.GradientDescentOptimizer(self.config.lr)
+        train_op = optimizer.minimize(loss)
         ### END YOUR CODE
         return train_op
 
@@ -185,12 +188,45 @@ class SoftmaxModel(Model):
         Args:
             config: A model configuration object of type Config
         """
-        super(SoftmaxModel, self).__init__()
         self.config = config
         self.build()
 
 
-def test_softmax_model():
+# def test_softmax_model():
+#     """Train softmax model for a number of steps."""
+#     config = Config()
+#
+#     # Generate random data to train the model on
+#     np.random.seed(1234)
+#     inputs = np.random.rand(config.n_samples, config.n_features)
+#     labels = np.zeros((config.n_samples, config.n_classes), dtype=np.int32)
+#     labels[:, 0] = 1
+#
+#     # Tell TensorFlow that the model will be built into the default Graph.
+#     # (not required but good practice)
+#     with tf.Graph().as_default() as graph:
+#         # Build the model and add the variable initializer op
+#         model = SoftmaxModel(config)
+#         init_op = tf.global_variables_initializer()
+#     # Finalizing the graph causes tensorflow to raise an exception if you try to modify the graph
+#     # further. This is good practice because it makes explicit the distinction between building and
+#     # running the graph.
+#     graph.finalize()
+#
+#     # Create a session for running ops in the graph
+#     with tf.Session(graph=graph) as sess:
+#         # Run the op to initialize the variables.
+#         sess.run(init_op)
+#         # Fit the model
+#         losses = model.fit(sess, inputs, labels)
+#
+#     # If ops are implemented correctly, the average loss should fall close to zero
+#     # rapidly.
+#     assert losses[-1] < .5
+#     print "Basic (non-exhaustive) classifier tests pass"
+
+
+if __name__ == "__main__":
     """Train softmax model for a number of steps."""
     config = Config()
 
@@ -222,7 +258,3 @@ def test_softmax_model():
     # rapidly.
     assert losses[-1] < .5
     print "Basic (non-exhaustive) classifier tests pass"
-
-
-if __name__ == "__main__":
-    test_softmax_model()
