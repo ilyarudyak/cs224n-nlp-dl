@@ -46,6 +46,12 @@ class SoftmaxModel(Model):
             self.labels_placeholder
         """
         ### YOUR CODE HERE
+        self.input_placeholder = tf.placeholder(dtype=tf.float32,
+                                                shape=(None,
+                                                       self.config.n_features))
+        self.labels_placeholder = tf.placeholder(dtype=tf.float32,
+                                                 shape=(None,
+                                                        self.config.n_classes))
         ### END YOUR CODE
 
     def create_feed_dict(self, inputs_batch, labels_batch=None):
@@ -171,6 +177,7 @@ class SoftmaxModel(Model):
         Args:
             config: A model configuration object of type Config
         """
+        super(SoftmaxModel, self).__init__()
         self.config = config
         self.build()
 
@@ -207,6 +214,7 @@ def test_softmax_model():
     # rapidly.
     assert losses[-1] < .5
     print "Basic (non-exhaustive) classifier tests pass"
+
 
 if __name__ == "__main__":
     test_softmax_model()

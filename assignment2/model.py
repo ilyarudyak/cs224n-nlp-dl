@@ -5,6 +5,10 @@ class Model(object):
     computational graphs. Each algorithm you will construct in this homework will
     inherit from a Model object.
     """
+
+    def __init__(self):
+        self.pred = self.add_prediction_op()
+
     def add_placeholders(self):
         """Adds placeholder variables to tensorflow computational graph.
 
@@ -105,6 +109,5 @@ class Model(object):
 
     def build(self):
         self.add_placeholders()
-        self.pred = self.add_prediction_op()
         self.loss = self.add_loss_op(self.pred)
         self.train_op = self.add_training_op(self.loss)
