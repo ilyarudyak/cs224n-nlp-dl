@@ -22,7 +22,7 @@ class PartialParse(object):
 
         ### YOUR CODE HERE
         self.stack = ['ROOT']
-        self.buffer = sentence
+        self.buffer = sentence[:]
         self.dependencies = []
         ### END YOUR CODE
 
