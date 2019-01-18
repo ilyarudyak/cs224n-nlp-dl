@@ -83,6 +83,13 @@ class ParserModel(Model):
             feed_dict: The feed dictionary mapping from placeholders to values.
         """
         ### YOUR CODE HERE
+        feed_dict = {
+            self.input_placeholder: inputs_batch,
+            self.dropout_placeholder: dropout
+        }
+
+        if labels_batch is not None:
+            feed_dict[self.labels_placeholder] = labels_batch
         ### END YOUR CODE
         return feed_dict
 
@@ -104,6 +111,12 @@ class ParserModel(Model):
             embeddings: tf.Tensor of shape (None, n_features*embed_size)
         """
         ### YOUR CODE HERE
+        # why do we need to create this variable?
+        vocabulary = tf.Variable(self.pretrained_embeddings)
+        embeddings = tf.nn.embedding_lookup(params=vocabulary,
+                                            ids=self.input_placeholder)
+        # concatenation of embedding vectors (see p.4 of assignment 2)
+        embeddings = tf.reshape(tensor=embeddings, shape=(None, -1))
         ### END YOUR CODE
         return embeddings
 
