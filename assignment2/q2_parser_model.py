@@ -57,7 +57,7 @@ class ParserModel(Model):
         ### YOUR CODE HERE
         self.input_placeholder = tf.placeholder(dtype=tf.int32, shape=(None, self.config.n_features))
         self.labels_placeholder = tf.placeholder(dtype=tf.float32, shape=(None, self.config.n_classes))
-        self.dropout_placeholder = tf.placeholder(dtype=tf.int32)
+        self.dropout_placeholder = tf.placeholder(dtype=tf.float32)
         ### END YOUR CODE
 
     def create_feed_dict(self, inputs_batch, labels_batch=None, dropout=0):
@@ -160,7 +160,7 @@ class ParserModel(Model):
         b2 = tf.Variable(initial_value=tf.zeros((self.config.n_classes,)))
 
         h = tf.nn.relu(tf.matmul(x, W) + b1)
-        h_drop = tf.nn.dropout(h, keep_prob=1 - self.dropout_placeholder)
+        h_drop = tf.nn.dropout(h, keep_prob=1-self.dropout_placeholder)
         pred = tf.matmul(h_drop, U) + b2
 
         ### END YOUR CODE
@@ -207,6 +207,8 @@ class ParserModel(Model):
             train_op: The Op for training.
         """
         ### YOUR CODE HERE
+        optimizer = tf.train.AdamOptimizer(learning_rate=self.config.lr)
+        train_op = optimizer.minimize(loss)
         ### END YOUR CODE
         return train_op
 
