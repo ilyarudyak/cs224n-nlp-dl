@@ -160,7 +160,7 @@ class ParserModel(Model):
         b2 = tf.Variable(initial_value=tf.zeros((self.config.n_classes,)))
 
         h = tf.nn.relu(tf.matmul(x, W) + b1)
-        h_drop = tf.nn.dropout(h, keep_prob=1-self.dropout_placeholder)
+        h_drop = tf.nn.dropout(h, keep_prob=1 - self.dropout_placeholder)
         pred = tf.matmul(h_drop, U) + b2
 
         ### END YOUR CODE
@@ -180,8 +180,8 @@ class ParserModel(Model):
             loss: A 0-d tensor (scalar)
         """
         ### YOUR CODE HERE
-        loss = tf.nn.softmax_cross_entropy_with_logits(labels=self.labels_placeholder,
-                                                       logits=pred)
+        loss = tf.nn.softmax_cross_entropy_with_logits_v2(labels=self.labels_placeholder,
+                                                          logits=pred)
         loss = tf.reduce_mean(loss)
         ### END YOUR CODE
         return loss
