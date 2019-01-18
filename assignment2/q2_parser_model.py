@@ -116,7 +116,8 @@ class ParserModel(Model):
         embeddings = tf.nn.embedding_lookup(params=vocabulary,
                                             ids=self.input_placeholder)
         # concatenation of embedding vectors (see p.4 of assignment 2)
-        embeddings = tf.reshape(tensor=embeddings, shape=(None, -1))
+        embeddings = tf.reshape(tensor=embeddings,
+                                shape=(-1, self.config.n_features * self.config.embed_size))
         ### END YOUR CODE
         return embeddings
 
@@ -133,6 +134,12 @@ class ParserModel(Model):
         Use the initializer from q2_initialization.py to initialize W and U (you can initialize b1
         and b2 with zeros)
 
+        Hint: Here are the dimensions of the various variables you will need to create
+            W:  (n_features*embed_size, hidden_size)
+            b1: (hidden_size,)
+            U:  (hidden_size, n_classes)
+            b2: (n_classes)
+
         Hint: Note that tf.nn.dropout takes the keep probability (1 - p_drop) as an argument.
               Therefore the keep probability should be set to the value of
               (1 - self.dropout_placeholder)
@@ -143,6 +150,19 @@ class ParserModel(Model):
 
         x = self.add_embedding()
         ### YOUR CODE HERE
+
+        xavier_init = xavier_weight_init()
+        W_shape = (self.config.n_features * self.config.embed_size, self.config.hidden_size)
+        U_shape = (self.config.hidden_size, self.config.n_classes)
+        W = tf.Variable(initial_value=xavier_init(W_shape))
+        b1 = tf.Variable(initial_value=tf.zeros(self.config.hidden_size))
+        U = tf.Variable(initial_value=xavier_init(U_shape))
+        b2 = tf.Variable(initial_value=tf.zeros(self.config.n_classes))
+
+        h = tf.nn.relu(tf.matmul(x, W) + b1)
+        h_drop = tf.nn.dropout(h, keep_prob=1-self.dropout_placeholder)
+        pred = tf.matmul(h_drop, U) + b2
+
         ### END YOUR CODE
         return pred
 
