@@ -16,31 +16,39 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
-
 FDIM = 4
 P_CASE = "CASE:"
 CASES = ["aa", "AA", "Aa", "aA"]
 START_TOKEN = "<s>"
 END_TOKEN = "</s>"
 
+
 def casing(word):
     if len(word) == 0: return word
 
     # all lowercase
-    if word.islower(): return "aa"
+    if word.islower():
+        return "aa"
     # all uppercase
-    elif word.isupper(): return "AA"
+    elif word.isupper():
+        return "AA"
     # starts with capital
-    elif word[0].isupper(): return "Aa"
+    elif word[0].isupper():
+        return "Aa"
     # has non-initial capital
-    else: return "aA"
+    else:
+        return "aA"
+
 
 def normalize(word):
     """
     Normalize words that are numbers or have casing.
     """
-    if word.isdigit(): return NUM
-    else: return word.lower()
+    if word.isdigit():
+        return NUM
+    else:
+        return word.lower()
+
 
 def featurize(embeddings, word):
     """
@@ -53,19 +61,22 @@ def featurize(embeddings, word):
     fv = case_mapping[case]
     return np.hstack((wv, fv))
 
+
 def evaluate(model, X, Y):
     cm = ConfusionMatrix(labels=LBLS)
     Y_ = model.predict(X)
     for i in range(Y.shape[0]):
         y, y_ = np.argmax(Y[i]), np.argmax(Y_[i])
-        cm.update(y,y_)
+        cm.update(y, y_)
     cm.print_table()
     return cm.summary()
+
 
 class ModelHelper(object):
     """
     This helper takes care of preprocessing data, constructing embeddings, etc.
     """
+
     def __init__(self, tok2id, max_length):
         self.tok2id = tok2id
         self.START = [tok2id[START_TOKEN], tok2id[P_CASE + "aa"]]
@@ -73,7 +84,8 @@ class ModelHelper(object):
         self.max_length = max_length
 
     def vectorize_example(self, sentence, labels=None):
-        sentence_ = [[self.tok2id.get(normalize(word), self.tok2id[UNK]), self.tok2id[P_CASE + casing(word)]] for word in sentence]
+        sentence_ = [[self.tok2id.get(normalize(word), self.tok2id[UNK]), self.tok2id[P_CASE + casing(word)]] for word
+                     in sentence]
         if labels:
             labels_ = [LBLS.index(l) for l in labels]
             return sentence_, labels_
@@ -114,6 +126,7 @@ class ModelHelper(object):
             tok2id, max_length = pickle.load(f)
         return cls(tok2id, max_length)
 
+
 def load_and_preprocess_data(args):
     logger.info("Loading training data...")
     train = read_conll(args.data_train)
@@ -130,6 +143,7 @@ def load_and_preprocess_data(args):
 
     return helper, train_data, dev_data, train, dev
 
+
 def load_embeddings(args, helper):
     embeddings = np.array(np.random.randn(len(helper.tok2id) + 1, EMBED_SIZE), dtype=np.float32)
     embeddings[0] = 0.
@@ -141,13 +155,14 @@ def load_embeddings(args, helper):
 
     return embeddings
 
+
 def build_dict(words, max_words=None, offset=0):
     cnt = Counter(words)
     if max_words:
         words = cnt.most_common(max_words)
     else:
         words = cnt.most_common()
-    return {word: offset+i for i, (word, _) in enumerate(words)}
+    return {word: offset + i for i, (word, _) in enumerate(words)}
 
 
 def get_chunks(seq, default=LBLS.index(NONE)):
@@ -177,5 +192,6 @@ def get_chunks(seq, default=LBLS.index(NONE)):
         chunks.append(chunk)
     return chunks
 
+
 def test_get_chunks():
-    assert get_chunks([4, 4, 4, 0, 0, 4, 1, 2, 4, 3], 4) == [(0,3,5), (1, 6, 7), (2, 7, 8), (3,9,10)]
+    assert get_chunks([4, 4, 4, 0, 0, 4, 1, 2, 4, 3], 4) == [(0, 3, 5), (1, 6, 7), (2, 7, 8), (3, 9, 10)]

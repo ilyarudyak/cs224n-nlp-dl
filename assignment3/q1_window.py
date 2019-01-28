@@ -366,9 +366,29 @@ def test_make_windowed_data():
     ]
 
 
+def test_make_windowed_data2():
+    sentences = [[[1, 1], [2, 0], [3, 3]], [[10, 10], [20, 0], [30, 30], [40, 40]]]
+    sentence_labels = [[1, 2, 3], [1, 2, 3, 1]]
+    data = zip(sentences, sentence_labels)
+    w_data = make_windowed_data(data, start=[5, 0], end=[6, 0], window_size=1)
+
+    assert len(w_data) == sum(len(sentence) for sentence in sentences)
+
+    assert w_data == [
+        ([5, 0] + [1, 1] + [2, 0], 1,),
+        ([1, 1] + [2, 0] + [3, 3], 2,),
+        ([2, 0] + [3, 3] + [6, 0], 3,),
+        ([5, 0] + [10, 10] + [20, 0], 1,),
+        ([10, 10] + [20, 0] + [30, 30], 2,),
+        ([20, 0] + [30, 30] + [40, 40], 3,),
+        ([30, 30] + [40, 40] + [6, 0], 1)
+    ]
+
+
 def do_test1(_):
     logger.info("Testing make_windowed_data")
     test_make_windowed_data()
+    test_make_windowed_data2()
     logger.info("Passed!")
 
 
