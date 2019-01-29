@@ -42,7 +42,9 @@ def casing(word):
 
 def normalize(word):
     """
-    Normalize words that are numbers or have casing.
+    normalize words that are numbers or have casing:
+      - digits replaced with a specific token and
+      - case changed to lower.
     """
     if word.isdigit():
         return NUM
@@ -97,7 +99,8 @@ class ModelHelper(object):
 
     @classmethod
     def build(cls, data):
-        # Preprocess data to construct an embedding
+        # Preprocess data (data is list of tuples (sentence, labels) where sentence is list of strings)
+        # to construct an embedding.
         # Reserve 0 for the special NIL token.
         tok2id = build_dict((normalize(word) for sentence, _ in data for word in sentence), offset=1, max_words=10000)
         tok2id.update(build_dict([P_CASE + c for c in CASES], offset=len(tok2id)))
@@ -157,6 +160,12 @@ def load_embeddings(args, helper):
 
 
 def build_dict(words, max_words=None, offset=0):
+    """
+    Build dictionary {word: index},
+    where index is 0 for most frequent word and max_words-1 for least frequent
+    (plus offset if any).
+    example: {'a': 13, 'be': 14, 'string': 10, 'the': 11, 'to': 12}
+    """
     cnt = Counter(words)
     if max_words:
         words = cnt.most_common(max_words)

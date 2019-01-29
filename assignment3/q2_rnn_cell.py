@@ -18,10 +18,12 @@ logger = logging.getLogger("hw3.q2.1")
 logger.setLevel(logging.DEBUG)
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
+
 class RNNCell(tf.nn.rnn_cell.RNNCell):
     """Wrapper around our RNN cell implementation that allows us to play
     nicely with TensorFlow.
     """
+
     def __init__(self, input_size, state_size):
         self.input_size = input_size
         self._state_size = state_size
@@ -62,7 +64,14 @@ class RNNCell(tf.nn.rnn_cell.RNNCell):
         # be defined elsewhere!
         with tf.variable_scope(scope):
             ### YOUR CODE HERE (~6-10 lines)
-            pass
+            W_x = tf.get_variable("W_x", shape=[self.input_size, self.state_size],
+                             initializer=tf.contrib.layers.xavier_initializer())
+            W_h = tf.get_variable("W_h", shape=[self.state_size, self.state_size],
+                             initializer=tf.contrib.layers.xavier_initializer())
+            b = tf.get_variable("b", shape=[self.state_size],
+                             initializer=tf.constant_initializer(0.0))
+
+            new_state = tf.nn.sigmoid(tf.matmul(inputs, W_x) + tf.matmul(state, W_h) + b)
             ### END YOUR CODE ###
         # For an RNN , the output and state are the same (N.B. this
         # isn't true for an LSTM, though we aren't using one of those in
@@ -70,16 +79,17 @@ class RNNCell(tf.nn.rnn_cell.RNNCell):
         output = new_state
         return output, new_state
 
+
 def test_rnn_cell():
     with tf.Graph().as_default():
         with tf.variable_scope("test_rnn_cell"):
-            x_placeholder = tf.placeholder(tf.float32, shape=(None,3))
-            h_placeholder = tf.placeholder(tf.float32, shape=(None,2))
+            x_placeholder = tf.placeholder(tf.float32, shape=(None, 3))
+            h_placeholder = tf.placeholder(tf.float32, shape=(None, 2))
 
             with tf.variable_scope("rnn"):
-                tf.get_variable("W_x", initializer=np.array(np.eye(3,2), dtype=np.float32))
-                tf.get_variable("W_h", initializer=np.array(np.eye(2,2), dtype=np.float32))
-                tf.get_variable("b",  initializer=np.array(np.ones(2), dtype=np.float32))
+                tf.get_variable("W_x", initializer=np.array(np.eye(3, 2), dtype=np.float32))
+                tf.get_variable("W_h", initializer=np.array(np.eye(2, 2), dtype=np.float32))
+                tf.get_variable("b", initializer=np.array(np.ones(2), dtype=np.float32))
 
             tf.get_variable_scope().reuse_variables()
             cell = RNNCell(3, 2)
@@ -106,10 +116,12 @@ def test_rnn_cell():
                 assert np.allclose(y_, ht_), "output and state should be equal."
                 assert np.allclose(ht, ht_, atol=1e-2), "new state vector does not seem to be correct."
 
+
 def do_test(_):
     logger.info("Testing rnn_cell")
     test_rnn_cell()
     logger.info("Passed!")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Tests the RNN cell implemented as part of Q2 of Homework 3')

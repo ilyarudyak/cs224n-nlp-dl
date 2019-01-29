@@ -28,3 +28,9 @@ What are the dimensions of `e(t), W and U` if we use a window of size w?
 size of the window is `w`, so we have size of `e(t)`: `(2*w+1)*D`;
 - we multiply `e(t)` on the left (as a raw vector), so `W` has shape: `((2*w+1)*D, H)`; 
 - again, we multiply `h(t)` from the left, so `U` has shape: `(H, C)`;
+## q2
+### (a) (i)
+How many more parameters does the RNN model in comparison 
+to the window-based model?
+- In the window-based model we have matrix `W` with dimensions `((2w+1)D, H)`;
+here we have 2 matrices: `Wh` with shape `(H, H)` and `We` with shape `(D, H)`;
