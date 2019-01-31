@@ -12,6 +12,6 @@ Assignments from [cs224n, Winter 2018](https://web.stanford.edu/class/archive/cs
 - Q3: Recurrent Neural Networks: Language Modeling (25 points, theory)
 
 ## Assignment 3
-- Q1: A window into NER (30 points)
+- Q1: A window into NER (30 points) **--IN PROGRESS**
 - Q2: Recurrent neural nets for NER (40 points)
 - Q3: Grooving with GRUs (30 points)
