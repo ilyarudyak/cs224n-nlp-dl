@@ -501,7 +501,7 @@ and	O	O
 207	O	O
 (	O	O
 A.	PERSON	PERSON
-Dale	PERSON	PERSON
+Dale	PERSON	O
 69	O	O
 ,	O	O
 H.	PERSON	PERSON
@@ -3714,7 +3714,7 @@ his	O	O
 body	O	O
 to	O	O
 a	O	O
-Rios	PERSON	PERSON
+Rios	PERSON	O
 rooting	O	O
 section	O	O
 in	O	O
@@ -4374,7 +4374,7 @@ record	O	O
 set	O	O
 by	O	O
 Andrew	PERSON	PERSON
-Magee	PERSON	O
+Magee	PERSON	PERSON
 during	O	O
 Wednesday	O	O
 's	O	O
@@ -6218,7 +6218,7 @@ to	O	O
 protest	O	O
 .	O	O
 Roberto	PERSON	PERSON
-Bisconti	PERSON	O
+Bisconti	PERSON	PERSON
 will	O	O
 be	O	O
 sidelined	O	O
@@ -6833,7 +6833,7 @@ not	O	O
 out	O	O
 46	O	O
 D.	PERSON	PERSON
-Lehmann	PERSON	O
+Lehmann	PERSON	PERSON
 st	O	O
 Kaluwitharana	PERSON	PERSON
 b	O	O
@@ -6847,7 +6847,7 @@ b	O	O
 Muralitharan	PERSON	PERSON
 8	O	O
 J.	PERSON	PERSON
-Gillespie	PERSON	O
+Gillespie	PERSON	PERSON
 st	O	O
 Kaluwitharana	PERSON	PERSON
 b	O	O
@@ -14865,7 +14865,7 @@ heats	O	O
 up	O	O
 .	O	O
 Pierre	PERSON	PERSON
-Belec	PERSON	O
+Belec	PERSON	PERSON
 NEW	O	O
 YORK	O	O
 1996-08-30	O	O
@@ -24166,7 +24166,7 @@ no	O	O
 reason	O	O
 to	O	O
 reopen	O	O
-El	O	O
+El	O	PERSON
 Al	O	PERSON
 carqo	O	O
 enquiry	O	O
@@ -24199,7 +24199,7 @@ the	O	O
 crash	O	O
 of	O	O
 an	O	O
-El	O	O
+El	O	PERSON
 Al	O	PERSON
 freighter	O	O
 which	O	O
@@ -24239,7 +24239,7 @@ been	O	O
 complied	O	O
 with	O	O
 by	O	O
-El	O	O
+El	O	PERSON
 Al	O	PERSON
 's	O	O
 head	O	O
@@ -24303,7 +24303,7 @@ the	O	O
 latest	O	O
 evidence	O	O
 from	O	O
-El	O	O
+El	O	PERSON
 Al	O	PERSON
 in	O	O
 no	O	O
@@ -28917,8 +28917,8 @@ this	O	O
 season	O	O
 ,	O	O
 joined	O	O
-Mickey	PERSON	O
-Rivers	PERSON	O
+Mickey	PERSON	PERSON
+Rivers	PERSON	PERSON
 as	O	O
 the	O	O
 only	O	O
@@ -29203,7 +29203,7 @@ Yankees	O	O
 losses	O	O
 .	O	O
 Mariano	PERSON	PERSON
-Rivera	PERSON	O
+Rivera	PERSON	PERSON
 pitched	O	O
 a	O	O
 scoreless	O	O
@@ -29409,7 +29409,7 @@ In	O	O
 Oakland	O	O
 ,	O	O
 Dave	PERSON	PERSON
-Telgheder	PERSON	O
+Telgheder	PERSON	PERSON
 scattered	O	O
 seven	O	O
 hits	O	O
@@ -29498,7 +29498,7 @@ Detroit	O	O
 ,	O	O
 Todd	PERSON	PERSON
 Van	PERSON	PERSON
-Poppel	PERSON	O
+Poppel	PERSON	PERSON
 pitched	O	O
 a	O	O
 five-hitter	O	O
@@ -30292,7 +30292,7 @@ Former	O	O
 Wallaby	O	O
 captain	O	O
 Michael	PERSON	PERSON
-Lynagh	PERSON	O
+Lynagh	PERSON	PERSON
 began	O	O
 his	O	O
 career	O	O
@@ -30405,7 +30405,7 @@ Laurent	PERSON	PERSON
 Cabannes	PERSON	O
 and	O	O
 Laurent	PERSON	PERSON
-Benezech	PERSON	O
+Benezech	PERSON	PERSON
 scoring	O	O
 a	O	O
 try	O	O
@@ -37032,7 +37032,7 @@ last	O	O
 season	O	O
 .	O	O
 Ray	PERSON	PERSON
-Lankford	PERSON	O
+Lankford	PERSON	PERSON
 went	O	O
 4-for-5	O	O
 with	O	O
@@ -37453,7 +37453,7 @@ the	O	O
 second	O	O
 set	O	O
 .	O	O
-Edberg	PERSON	PERSON
+Edberg	PERSON	O
 lost	O	O
 his	O	O
 own	O	O
@@ -39190,7 +39190,7 @@ who	O	O
 succeeded	O	O
 Paul	PERSON	PERSON
 Van	PERSON	PERSON
-Himst	PERSON	O
+Himst	PERSON	PERSON
 as	O	O
 coach	O	O
 in	O	O
@@ -40445,7 +40445,7 @@ Scottish	O	O
 politician	O	O
 Sir	O	O
 Henry	PERSON	PERSON
-Campbell-Bannerman	PERSON	O
+Campbell-Bannerman	PERSON	PERSON
 born	O	O
 .	O	O
 As	O	O
@@ -40580,7 +40580,7 @@ Waterfront	O	O
 -	O	O
 Sir	O	O
 Anthony	PERSON	PERSON
-Quayle	PERSON	O
+Quayle	PERSON	PERSON
 born	O	O
 .	O	O
 British	O	O
@@ -51360,8 +51360,3 @@ Thursday	O	O
 Dhaka	O	O
 Newsroom	O	O
 880-2-506363	O	O
-
-precision = 0.8015075376884422
-recall = 0.5223799126637555
-F1 = 0.6325181758096496
-

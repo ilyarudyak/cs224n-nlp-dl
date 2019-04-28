@@ -2,6 +2,10 @@ import json, sys
 import base64
 from Datum import Datum
 
+from feature_utils import is_contain_digits_check, \
+    is_contain_2_or_more_digits_check, \
+    is_camel_case_and_start_with_capital_check
+
 
 class FeatureFactory:
     """
@@ -35,12 +39,12 @@ class FeatureFactory:
         # added enough features, take out the features that you don't need.
 
         # TODO: Add your features here
-        # is_digit = False
-        # if currentWord.isdigit():
-        #     is_digit = True
-        #
-        # if is_digit:
-        #     features.append("is_digit" + currentWord)
+
+        if is_contain_digits_check(currentWord):
+            features.append("is_contain_digits")
+
+        if is_camel_case_and_start_with_capital_check(currentWord):
+            features.append("is_camel_case_and_start_with_capital")
 
         return features
 

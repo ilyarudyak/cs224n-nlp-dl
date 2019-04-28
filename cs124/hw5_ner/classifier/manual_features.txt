@@ -1,0 +1,13 @@
+# Baseline Features
+precision = 0.8015075376884422
+recall = 0.5223799126637555
+F1 = 0.6325181758096496
+
+# is_contain_digits
+precision = 0.9191919191919192
+recall = 0.5960698689956332
+F1 = 0.7231788079470199
+
+# is_camel_case_and_start_with_capital
+
+
