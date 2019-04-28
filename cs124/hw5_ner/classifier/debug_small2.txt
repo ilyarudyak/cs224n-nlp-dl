@@ -1,0 +1,6 @@
+Puerto	O	O
+Rico	O	O
+"	O	O
+Hector	PERSON	PERSON
+Macho	PERSON	O
+"	PERSON	O
