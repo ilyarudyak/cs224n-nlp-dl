@@ -28,6 +28,8 @@ class Scorer(object):
                 guessEntities.add((start, i))
             prevLabel = label
 
+        print trueEntities, guessEntities
+
         intersection = trueEntities.intersection(guessEntities)
         tp = len(intersection)
 
@@ -39,7 +41,7 @@ class Scorer(object):
 
     @staticmethod
     def readFile(in_file):
-        data = []
+        data, prevLabel = [], ''
         with open(in_file) as in_f:
             f_tsv = csv.reader(in_f, delimiter='\t', escapechar='\\')
             for row in f_tsv:
@@ -48,14 +50,52 @@ class Scorer(object):
                     word, label, guessLabel = row
                     datum = Datum(word, label)
                     datum.guessLabel = guessLabel
+                    datum.previousLabel = prevLabel
+                    prevLabel = label
                     data.append(datum)
                 except:
                     print row
         return data
 
+    @staticmethod
+    def analyzeData(data):
+        """
+        error1
+        PERSON O
+        PERSON O
+
+        error2
+        PERSON O
+        PERSON PERSON
+
+        error3
+        PERSON PERSON
+        PERSON O
+        """
+        count_error1, count_error2, count_error3 = 0, 0, 0
+        datum_prev = data[0]
+        for i in range(1, len(data)):
+            datum = data[i]
+            if datum_prev.label == 'PERSON' and datum_prev.guessLabel == 'O' and \
+                    datum.label == 'PERSON' and datum.guessLabel == 'O':
+                count_error1 += 1
+            elif datum_prev.label == 'PERSON' and datum_prev.guessLabel == 'O' and \
+                    datum.label == 'PERSON' and datum.guessLabel == 'PERSON':
+                count_error2 += 1
+            elif datum_prev.label == 'PERSON' and datum_prev.guessLabel == 'PERSON' and \
+                    datum.label == 'PERSON' and datum.guessLabel == 'O':
+                count_error3 += 1
+            datum_prev = datum
+
+        print count_error1, count_error2, count_error3
+
+    @staticmethod
+    def printData(data, n):
+        for datum in data[:n]:
+            print datum
+
 
 if __name__ == '__main__':
-    in_file = 'debug_esc.txt'
+    in_file = 'debug_small.txt'
     data = Scorer.readFile(in_file)
     print Scorer.score(data)
-

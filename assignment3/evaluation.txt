@@ -1,0 +1,19 @@
+correct ORG      ORG       O O    O  ORG ORG    . . . O         PER PER    O
+guess   MISC     O         O O    O  ORG O      . . . O         PER PER    O
+        American Airlines, a unit of AMR Corp.  . . . spokesman Tim Wagner said.
+
+# token level
+TP = 3 (AMR, Tim, Wagner)
+FP = 1 (American)
+FN = 2 (Airlines, Corp.)
+
+Precision = TP / (TP + FP) = 3 / 4
+Recall =    TP / (TP + FN) = 3 / 5 # that's not 3 / 6 like in the text of the assignment
+
+# entity level
+TP = 1 ([Tim Wagner])
+FP = 2 ([American], [AMR])
+FN = 2 ([American Airlines], [AMR Corp.])
+
+Precision = TP / (TP + FP) = 1 / 3
+Recall =    TP / (TP + FN) = 1 / 3 # that's the same as in the assignment
