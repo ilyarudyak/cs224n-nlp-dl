@@ -45,9 +45,9 @@ if __name__ == '__main__':
     in_file, out_file = 'debug.txt', 'debug_esc.txt'
     escape_double_quotes(in_file, out_file)
 
-    in_file, out_file = 'debug_esc.txt', 'debug_wrong.txt'
-    wrong_guess = get_wrong_guess(in_file, out_file)
-    print len(wrong_guess)
+    # in_file, out_file = 'debug_esc.txt', 'debug_wrong.txt'
+    # wrong_guess = get_wrong_guess(in_file, out_file)
+    # print len(wrong_guess)
 
     # in_file = 'debug_esc.txt'
     # check_names(in_file)
