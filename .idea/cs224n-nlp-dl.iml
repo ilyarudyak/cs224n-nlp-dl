@@ -12,6 +12,14 @@
       <sourceFolder url="file://$MODULE_DIR$/assignment3" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/assignment4/preprocessing" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/assignment4" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/misc" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124/hw5_ner" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124/hw5_ner/classifier" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124/hw5_ner/classifier/classes" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124/hw5_ner/classifier/classes/org" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124/hw5_ner/classifier/org" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124/hw5_ner/classifier/org/json" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="inheritedJdk" />

@@ -4,7 +4,11 @@ from Datum import Datum
 
 from feature_utils import is_contain_digits_check, \
     is_contain_2_or_more_digits_check, \
-    is_camel_case_and_start_with_capital_check
+    is_camel_case_check, \
+    is_only_first_letter_capitalized_check, \
+    is_contain_dot_and_len2_check, \
+    is_all_caps_check, is_lower_case_check, \
+    is_end_with_vowel_check, is_end_in_the_list
 
 
 class FeatureFactory:
@@ -43,10 +47,33 @@ class FeatureFactory:
         if is_contain_digits_check(currentWord):
             features.append("is_contain_digits")
 
-        if is_camel_case_and_start_with_capital_check(currentWord):
-            features.append("is_camel_case_and_start_with_capital")
+        if is_only_first_letter_capitalized_check(currentWord):
+            features.append("is_first_letter_capitalized" + ", prevLabel=" + previousLabel)
+
+        # if is_all_caps_check(currentWord):
+        #     features.append("is_all_caps")
+
+        if is_camel_case_check(currentWord):
+            features.append("is_camel_case" + ", prevLabel=" + previousLabel)
+
+        # if is_lower_case_check(currentWord):
+        #     features.append("is_lower_case")
+
+        if len(currentWord) >= 3:
+            features.append("begin_with=" + currentWord[0:2])
+            features.append("end_with=" + currentWord[-3:])
 
         return features
+
+    def wordShapeConversion(self, s):
+        if s.isdigit():
+            return "d"
+        elif s.islower():
+            return "x"
+        elif s.isupper():
+            return "X"
+        else:
+            return s
 
     """ Do not modify this method """
 
