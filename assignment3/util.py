@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 CS224N 2016-17: Homework 3
-util.py: General utility routines
+utils.py: General utility routines
 Arun Chaganty <chaganty@stanford.edu>
 """
 
