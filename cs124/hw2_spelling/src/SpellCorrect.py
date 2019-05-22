@@ -121,12 +121,12 @@ def main():
     laplaceBigramOutcome = laplaceBigramSpell.evaluate(devCorpus)
     print str(laplaceBigramOutcome)
 
-    # print 'Stupid Backoff Language Model: '
-    # sbLM = StupidBackoffLanguageModel(trainingCorpus)
-    # sbSpell = SpellCorrect(sbLM, trainingCorpus)
-    # sbOutcome = sbSpell.evaluate(devCorpus)
-    # print str(sbOutcome)
-    #
+    print 'Stupid Backoff Language Model: '
+    sbLM = StupidBackoffLanguageModel(trainingCorpus)
+    sbSpell = SpellCorrect(sbLM, trainingCorpus)
+    sbOutcome = sbSpell.evaluate(devCorpus)
+    print str(sbOutcome)
+
     # print 'Custom Language Model: '
     # customLM = CustomLanguageModel(trainingCorpus)
     # customSpell = SpellCorrect(customLM, trainingCorpus)

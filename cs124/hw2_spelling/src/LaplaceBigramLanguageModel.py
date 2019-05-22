@@ -18,13 +18,13 @@ class LaplaceBigramLanguageModel:
         """
         for sentence in corpus.corpus:
 
-          bigrams = ngrams(sentence.getCorrectSentence(), 2)
-          for bigram in bigrams:
-            self.bigramCounts[bigram] += 1
+            bigrams = ngrams(sentence.getCorrectSentence(), 2)
+            for bigram in bigrams:
+                self.bigramCounts[bigram] += 1
 
-          for datum in sentence.data:
-            token = datum.word
-            self.unigramCounts[token] = self.unigramCounts[token] + 1
+            for datum in sentence.data:
+                token = datum.word
+                self.unigramCounts[token] = self.unigramCounts[token] + 1
 
     def score(self, sentence):
         """ Takes a list of strings as argument and returns the log-probability of the
@@ -33,6 +33,6 @@ class LaplaceBigramLanguageModel:
         score = 0.0
         bigrams = ngrams(sentence, 2)
         for bigram in bigrams:
-          score += log(self.bigramCounts[bigram] + 1)
-          score -= log(self.unigramCounts[bigram[0]] + self.uniqueBigrams)
+            score += log(self.bigramCounts[bigram] + 1)
+            score -= log(self.unigramCounts[bigram[0]] + self.uniqueBigrams)
         return score
