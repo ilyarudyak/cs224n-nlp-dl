@@ -31,6 +31,8 @@ class NaiveBayes:
         self.numFolds = 10
 
         self.vocabulary = set()
+        self.UNK = 'UNK'
+        self.vocabulary.add(self.UNK)
 
         self.docsCount = 0
         self.docsPos = 0
@@ -55,8 +57,12 @@ class NaiveBayes:
         """ TODO
         'words' is a list of words to classify. Return 'pos' or 'neg' classification.
         """
+        # print self.priorPos, self.priorNeg
         posLogProb, negLogProb = log(self.priorPos), log(self.priorNeg)
         for word in words:
+            # print word, self.condProbsPos[word], self.condProbsNeg[word]
+            if word not in self.vocabulary:
+                word = self.UNK
             posLogProb += log(self.condProbsPos[word])
             negLogProb += log(self.condProbsNeg[word])
 
@@ -134,6 +140,7 @@ class NaiveBayes:
         return split
 
     def train(self, split):
+        # print 'I am training ...'
         for example in split.train:
             words = example.words
             if self.FILTER_STOP_WORDS:
@@ -143,16 +150,21 @@ class NaiveBayes:
         self.getCondProbs()
 
     def getPriorProbs(self):
+        # print 'I am setting prior probs ...'
         self.priorPos = float(self.docsPos) / self.docsCount
         self.priorNeg = float(self.docsNeg) / self.docsCount
 
     def getCondProbs(self):
+        # print 'I am setting cond probs ...'
         posNorm = float(sum([c for c in self.wordsPos.values()]) + len(self.vocabulary))
         negNorm = float(sum([c for c in self.wordsNeg.values()]) + len(self.vocabulary))
 
         for word in self.vocabulary:
             self.condProbsPos[word] = (self.wordsPos[word] + 1) / posNorm
             self.condProbsNeg[word] = (self.wordsNeg[word] + 1) / negNorm
+
+        self.condProbsPos[self.UNK] = 1 / posNorm
+        self.condProbsNeg[self.UNK] = 1 / negNorm
 
     def crossValidationSplits(self, trainDir):
         """Returns a lsit of TrainSplits corresponding to the cross validation splits."""
@@ -254,6 +266,23 @@ class NaiveBayes:
             splits.append(split)
         return splits
 
+    def getToySplit(self):
+        filename = '/Users/ilyarudyak/Dropbox/courses/2019/cs224n-nlp-dl/cs124/hw3_sentiment/src/nb_example.txt'
+        split = self.TrainSplit()
+        count = 0
+        with open(filename) as f:
+            for line in f:
+                if line.strip():
+                    example = self.Example()
+                    example.words = line.strip().split()
+                    if count < 3:
+                        example.klass = self.klassPos
+                    else:
+                        example.klass = self.klassNeg
+                    split.train.append(example)
+                    count += 1
+        return split
+
 
 def main():
     nb = NaiveBayes()
@@ -274,11 +303,12 @@ def main():
     for split in splits:
         classifier = NaiveBayes()
         accuracy = 0.0
-        for example in split.train:
-            words = example.words
-            if nb.FILTER_STOP_WORDS:
-                words = classifier.filterStopWords(words)
-            classifier.addExample(example.klass, words)
+        classifier.train(split)
+        # for example in split.train:
+            # words = example.words
+            # if nb.FILTER_STOP_WORDS:
+            #     words = classifier.filterStopWords(words)
+            # classifier.addExample(example.klass, words)
 
         for example in split.test:
             words = example.words
