@@ -3,9 +3,10 @@ from math import log
 from nltk import ngrams
 
 
-class CustomLanguageModel:
+class KNBigramLanguageModel:
     """
     Kneser-Ney smoothing for bigrams.
+    This class DOES NOT pre compute all probabilities.
     """
 
     def __init__(self, corpus):
@@ -16,15 +17,6 @@ class CustomLanguageModel:
         self.bigramCounts = defaultdict(int)
         self.trigramCounts = defaultdict(int)
         self.getNgramCounts(corpus)
-
-        self.contProbs = defaultdict(int)
-        self.getContProbs()
-
-        self.lambdas = defaultdict(int)
-        self.getLambdas()
-
-        self.knProbs = defaultdict(int)
-        self.getKnProbs()
 
     def getNgramCounts(self, corpus):
         """ Takes a corpus and trains your language model.
@@ -50,28 +42,24 @@ class CustomLanguageModel:
         sortedNgrams = sorted(list(ngramCounts.items()), reverse=True, key=lambda x: x[1])
         return sortedNgrams[0:n]
 
-    def getContProbs(self):
-        for w, _ in self.bigramCounts:
-            for w0, w1 in self.bigramCounts:
-                if w == w1:
-                    self.contProbs[w] += 1
+    def getFirstTerm(self, bigram):
+        wi_1, wi = bigram
+        if wi_1 in self.unigramCounts:
+            return max(self.bigramCounts[(wi_1, wi)] - self.d, 0) / self.unigramCounts[wi_1]
+        else:
+            return 0
 
-            self.contProbs[w] *= self.d / len(self.bigramCounts)
+    def getLambda(self, wi_1):
+        count = [self.bigramCounts[(wi_1, w)] for w in self. unigramCounts if self.bigramCounts[(wi_1, w)] > 0]
+        if count:
+            return self.d * len(count) / sum(count)
+        else:
+            return 0
 
-    def getLambdas(self):
-        for w, _ in self.bigramCounts:
-            count = 0.0
-            for w0, w1 in self.bigramCounts:
-                if w == w0:
-                    count += self.bigramCounts[(w0, w1)]
-                    self.lambdas[w] += 1
-            self.lambdas[w] /= count
-
-    def getKnProbs(self):
-        for bigram in self.bigramCounts:
-            wi_1, wi = bigram
-            self.knProbs[bigram] += max(self.bigramCounts[bigram] - self.d, 0) / self.unigramCounts[wi_1]
-            self.knProbs[bigram] += self.lambdas[wi_1] * self.contProbs[wi]
+    def getContProb(self, wi):
+        count = [w for w in self. unigramCounts if self.bigramCounts[(w, wi)] > 0]
+        count2 = [bigram for bigram in self.bigramCounts if self.bigramCounts[bigram] > 0]
+        return len(count) / len(count2)
 
     def score(self, sentence):
         """ Takes a list of strings as argument and returns the log-probability of the
@@ -80,8 +68,11 @@ class CustomLanguageModel:
         score = 0.0
         bigrams = ngrams(sentence, 2)
         for bigram in bigrams:
-            if bigram in self.bigramCounts:
-                score += log(self.knProbs[bigram])
+            wi_1, wi = bigram
+            t1, lambd, p_cont = self.getFirstTerm(bigram), self.getLambda(wi_1), self.getContProb(wi)
+            prob = t1 + lambd * p_cont
+            if prob:
+                score += log(prob)
             else:
-                score -= log(len(self.bigramCounts))
+                score -= log(len(self.unigramCounts))
         return score

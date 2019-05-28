@@ -7,7 +7,7 @@ from UnigramLanguageModel import UnigramLanguageModel
 from StupidBackoffLanguageModel import StupidBackoffLanguageModel
 from LaplaceUnigramLanguageModel import LaplaceUnigramLanguageModel
 from LaplaceBigramLanguageModel import LaplaceBigramLanguageModel
-from CustomLanguageModel import CustomLanguageModel
+from KNBigramLanguageModel import KNBigramLanguageModel
 from EditModel import EditModel
 from SpellingResult import SpellingResult
 import types
@@ -35,7 +35,7 @@ class SpellCorrect:
         numCorrect = 0
         numTotal = 0
         testData = corpus.generateTestCases()
-        for sentence in testData:
+        for sentence in testData[:10]:
             if sentence.isEmpty():
                 continue
             errorSentence = sentence.getErrorSentence()
@@ -43,6 +43,7 @@ class SpellCorrect:
             if sentence.isCorrection(hypothesis):
                 numCorrect += 1
             numTotal += 1
+            print numCorrect, numTotal
         return SpellingResult(numCorrect, numTotal)
 
     def correctSentence(self, sentence):
@@ -103,35 +104,35 @@ def main():
     devPath = '../data/holbrook-tagged-dev.dat'
     devCorpus = HolbrookCorpus(devPath)
 
-    print 'Uniform Language Model: '
-    uniformLM = UniformLanguageModel(trainingCorpus)
-    uniformSpell = SpellCorrect(uniformLM, trainingCorpus)
-    uniformOutcome = uniformSpell.evaluate(devCorpus)
-    print str(uniformOutcome)
+    # print 'Uniform Language Model: '
+    # uniformLM = UniformLanguageModel(trainingCorpus)
+    # uniformSpell = SpellCorrect(uniformLM, trainingCorpus)
+    # uniformOutcome = uniformSpell.evaluate(devCorpus)
+    # print str(uniformOutcome)
+    #
+    # print 'Laplace Unigram Language Model: '
+    # laplaceUnigramLM = LaplaceUnigramLanguageModel(trainingCorpus)
+    # laplaceUnigramSpell = SpellCorrect(laplaceUnigramLM, trainingCorpus)
+    # laplaceUnigramOutcome = laplaceUnigramSpell.evaluate(devCorpus)
+    # print str(laplaceUnigramOutcome)
+    #
+    # print 'Laplace Bigram Language Model: '
+    # laplaceBigramLM = LaplaceBigramLanguageModel(trainingCorpus)
+    # laplaceBigramSpell = SpellCorrect(laplaceBigramLM, trainingCorpus)
+    # laplaceBigramOutcome = laplaceBigramSpell.evaluate(devCorpus)
+    # print str(laplaceBigramOutcome)
+    #
+    # print 'Stupid Backoff Language Model: '
+    # sbLM = StupidBackoffLanguageModel(trainingCorpus)
+    # sbSpell = SpellCorrect(sbLM, trainingCorpus)
+    # sbOutcome = sbSpell.evaluate(devCorpus)
+    # print str(sbOutcome)
 
-    print 'Laplace Unigram Language Model: '
-    laplaceUnigramLM = LaplaceUnigramLanguageModel(trainingCorpus)
-    laplaceUnigramSpell = SpellCorrect(laplaceUnigramLM, trainingCorpus)
-    laplaceUnigramOutcome = laplaceUnigramSpell.evaluate(devCorpus)
-    print str(laplaceUnigramOutcome)
-
-    print 'Laplace Bigram Language Model: '
-    laplaceBigramLM = LaplaceBigramLanguageModel(trainingCorpus)
-    laplaceBigramSpell = SpellCorrect(laplaceBigramLM, trainingCorpus)
-    laplaceBigramOutcome = laplaceBigramSpell.evaluate(devCorpus)
-    print str(laplaceBigramOutcome)
-
-    print 'Stupid Backoff Language Model: '
-    sbLM = StupidBackoffLanguageModel(trainingCorpus)
-    sbSpell = SpellCorrect(sbLM, trainingCorpus)
-    sbOutcome = sbSpell.evaluate(devCorpus)
-    print str(sbOutcome)
-
-    # print 'Custom Language Model: '
-    # customLM = CustomLanguageModel(trainingCorpus)
-    # customSpell = SpellCorrect(customLM, trainingCorpus)
-    # customOutcome = customSpell.evaluate(devCorpus)
-    # print str(customOutcome)
+    print 'Custom Language Model: '
+    customLM = KNBigramLanguageModel(trainingCorpus)
+    customSpell = SpellCorrect(customLM, trainingCorpus)
+    customOutcome = customSpell.evaluate(devCorpus)
+    print str(customOutcome)
 
 
 if __name__ == "__main__":

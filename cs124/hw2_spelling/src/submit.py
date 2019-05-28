@@ -207,7 +207,7 @@ from UnigramLanguageModel import UnigramLanguageModel
 from StupidBackoffLanguageModel import StupidBackoffLanguageModel
 from LaplaceUnigramLanguageModel import LaplaceUnigramLanguageModel
 from LaplaceBigramLanguageModel import LaplaceBigramLanguageModel
-from CustomLanguageModel import CustomLanguageModel
+from KNBigramLanguageModel2 import KNBigramLanguageModel2
 from SpellCorrect import SpellCorrect
 
 
@@ -225,7 +225,7 @@ def output(partId, ch_aux):
   elif partId == 5 or partId == 6:
     lm = StupidBackoffLanguageModel(trainCorpus)
   elif partId == 7 or partId == 8:
-    lm = CustomLanguageModel(trainCorpus)
+    lm = KNBigramLanguageModel2(trainCorpus)
   else:
     print 'Unknown partId: " + partId'
     return None
