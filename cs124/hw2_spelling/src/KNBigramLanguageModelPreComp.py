@@ -3,7 +3,7 @@ from math import log
 from nltk import ngrams
 
 
-class KNBigramLanguageModel2:
+class KNBigramLanguageModelPreComp:
     """
     Kneser-Ney smoothing for bigrams.
     This class pre computes all probabilities.
@@ -11,6 +11,7 @@ class KNBigramLanguageModel2:
 
     def __init__(self, corpus):
         """Initialize your data structures in the constructor."""
+        print 'building model ...'
         self.d = .75
 
         self.unigramCounts = defaultdict(int)

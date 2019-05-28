@@ -8,6 +8,7 @@ from StupidBackoffLanguageModel import StupidBackoffLanguageModel
 from LaplaceUnigramLanguageModel import LaplaceUnigramLanguageModel
 from LaplaceBigramLanguageModel import LaplaceBigramLanguageModel
 from KNBigramLanguageModel import KNBigramLanguageModel
+from KNBigramLanguageModelPreComp import KNBigramLanguageModelPreComp
 from EditModel import EditModel
 from SpellingResult import SpellingResult
 import types
@@ -35,7 +36,7 @@ class SpellCorrect:
         numCorrect = 0
         numTotal = 0
         testData = corpus.generateTestCases()
-        for sentence in testData[:10]:
+        for sentence in testData:
             if sentence.isEmpty():
                 continue
             errorSentence = sentence.getErrorSentence()
@@ -43,7 +44,8 @@ class SpellCorrect:
             if sentence.isCorrection(hypothesis):
                 numCorrect += 1
             numTotal += 1
-            print numCorrect, numTotal
+            if numTotal % 100 == 0:
+                print numCorrect, numTotal
         return SpellingResult(numCorrect, numTotal)
 
     def correctSentence(self, sentence):
@@ -129,7 +131,7 @@ def main():
     # print str(sbOutcome)
 
     print 'Custom Language Model: '
-    customLM = KNBigramLanguageModel(trainingCorpus)
+    customLM = KNBigramLanguageModelPreComp(trainingCorpus)
     customSpell = SpellCorrect(customLM, trainingCorpus)
     customOutcome = customSpell.evaluate(devCorpus)
     print str(customOutcome)
