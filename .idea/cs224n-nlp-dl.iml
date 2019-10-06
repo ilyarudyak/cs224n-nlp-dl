@@ -23,6 +23,9 @@
       <sourceFolder url="file://$MODULE_DIR$/w4705" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/w4705/hw1_hmms" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cs124/hw2_spelling" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124/hw2_spelling/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124/hw3_sentiment" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cs124/hw2_spelling/src/temp" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="inheritedJdk" />
