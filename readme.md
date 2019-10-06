@@ -1,7 +1,7 @@
 # Assignments
 Assignments from [cs224n, Winter 2018](https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1184/syllabus.html).
 ## Assignment 1
-- Q1: Softmax (10 points) **--DONE**
+- Q1: Softmax (10 points) **--DONE** 
 - Q2: Neural Network Basics (30 points) **--DONE**
 - Q3: word2vec (40 points + 2 bonus) **--DONE**
 - Q4: Sentiment Analysis (20 points) **--DONE**
